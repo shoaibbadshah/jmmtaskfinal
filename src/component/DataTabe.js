@@ -168,18 +168,21 @@ export default function DataTable({ rows, setRows }) {
             backgroundColor: "rgb(41,89,138)",
             color: "white",
           },
+          //   "& .MuiDataGrid-cell": {
+          //     border: "1px solid lightgrey",
+          //   },
           "& .MuiDataGrid-cell:hover": {
             color: "primary.main",
           },
         }}
-        editMode="row"
+        // editMode="row"
         rows={[...rows, placeholderItem]}
         onRowEditStop={handleOnRowEditStop}
         columns={columns}
         autoHeight
-        headerHeight={40}
-        disableColumnMenu
-        hideFooter
+        // headerHeight={40}
+        // disableColumnMenu
+        // hideFooter
       />
     </div>
   );

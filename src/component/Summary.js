@@ -10,7 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useMemo } from "react";
-import { getTotalExcVat, getVatAmount } from "../utils/item";
+import { getTotalExcVat, getVatAmount } from "../utils";
 
 const COLOR = "rgb(66,127,188)";
 export default function Summary({ rows = [] }) {

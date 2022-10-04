@@ -1,18 +1,13 @@
-import { useState, useMemo, useCallback } from "react";
+import { useMemo, useCallback } from "react";
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
-import {
-  getTotalExcVat,
-  getVatAmount,
-  items,
-  placeholderItem,
-} from "../utils/item";
+import { getTotalExcVat, getVatAmount, items, placeholderItem } from "../utils";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
-import RenderCustomCell from "../component/RenderCustomCell";
+
+import TypeAndSelectItem from "./TypeAndSelectItem";
 
 export default function DataTable({ rows, setRows }) {
-  const [defaultItemValue, setDefaultItemValue] = useState("");
-  const handleItemChange = useCallback(
-    (e, item) => {
+  const handleAddItem = useCallback(
+    (item) => {
       const selectedItem = items.find(({ itemName }) => itemName === item);
       if (selectedItem) {
         setRows((prevState) => [
@@ -20,13 +15,12 @@ export default function DataTable({ rows, setRows }) {
           { id: prevState.length + 1, ...selectedItem },
         ]);
       }
-      setDefaultItemValue("");
     },
     [setRows]
   );
   const handleDeleteClick = useCallback(
-    (id) => {
-      setRows((prevState) => prevState.filter(({ itemId }) => itemId !== id));
+    (currentId) => {
+      setRows((prevState) => prevState.filter(({ id }) => id !== currentId));
     },
     [setRows]
   );
@@ -38,11 +32,7 @@ export default function DataTable({ rows, setRows }) {
         headerName: "Item",
         minWidth: 200,
         renderCell: (params) => (
-          <RenderCustomCell
-            params={params}
-            defaultItemValue={defaultItemValue}
-            handleItemChange={handleItemChange}
-          />
+          <TypeAndSelectItem params={params} handleAddItem={handleAddItem} />
         ),
       },
       { field: "unit", align: "center", sortable: false, headerName: "Unit" },
@@ -141,7 +131,7 @@ export default function DataTable({ rows, setRows }) {
                   />
                 }
                 label="Delete"
-                onClick={() => handleDeleteClick(params.row.itemId)}
+                onClick={() => handleDeleteClick(params.row.id)}
                 color="inherit"
               />,
             ];
@@ -151,12 +141,12 @@ export default function DataTable({ rows, setRows }) {
         },
       },
     ],
-    [handleDeleteClick, handleItemChange, defaultItemValue]
+    [handleDeleteClick, handleAddItem]
   );
 
   const handleOnRowEditStop = (params) => {
     const rowMap = rows.map((item) =>
-      item.itemId === params.row.itemId ? params.row : item
+      item.id === params.row.id ? params.row : item
     );
     setRows(rowMap);
   };
@@ -168,21 +158,21 @@ export default function DataTable({ rows, setRows }) {
             backgroundColor: "rgb(41,89,138)",
             color: "white",
           },
-          //   "& .MuiDataGrid-cell": {
-          //     border: "1px solid lightgrey",
-          //   },
+          "& .MuiDataGrid-cell": {
+            border: "1px solid lightgrey",
+          },
           "& .MuiDataGrid-cell:hover": {
             color: "primary.main",
           },
         }}
-        // editMode="row"
+        editMode="row"
         rows={[...rows, placeholderItem]}
         onRowEditStop={handleOnRowEditStop}
         columns={columns}
         autoHeight
         // headerHeight={40}
-        // disableColumnMenu
-        // hideFooter
+        disableColumnMenu
+        hideFooter
       />
     </div>
   );

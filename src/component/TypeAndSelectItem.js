@@ -1,16 +1,27 @@
 import { Autocomplete, TextField } from "@mui/material";
-import { memo } from "react";
-import { items } from "../utils/item";
+import { memo, useState } from "react";
+import { items } from "../utils";
 
-const RenderCustomCell = ({ params, handleItemChange, defaultItemValue }) => {
+const TypeAndSelectItem = ({ params, handleAddItem }) => {
+  const [value, setValue] = useState("");
+  const [inputValue, setInputValue] = useState("");
   const isPlaceholderItem = params.row.isPlaceholderItem;
+
   return isPlaceholderItem ? (
     <Autocomplete
       size="small"
       isOptionEqualToValue={() => true}
       fullWidth
-      inputValue={defaultItemValue}
-      onChange={handleItemChange}
+      value={value}
+      inputValue={inputValue}
+      onChange={(e, item) => {
+        handleAddItem(item);
+        setValue("");
+        setInputValue("");
+      }}
+      onInputChange={(event, newInputValue) => {
+        setInputValue(newInputValue);
+      }}
       id="controllable-states-demo"
       clearIcon={null}
       forcePopupIcon={false}
@@ -33,4 +44,4 @@ const RenderCustomCell = ({ params, handleItemChange, defaultItemValue }) => {
     />
   );
 };
-export default memo(RenderCustomCell);
+export default memo(TypeAndSelectItem);
